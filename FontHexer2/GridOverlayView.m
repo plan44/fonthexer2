@@ -82,16 +82,15 @@ static CGFloat const cellHeight = 40.0;
       [line stroke];
   }
 
-  // Calculate the position of the draggable point
-  NSPoint origin = NSMakePoint(bounds.origin.x + self.originX, bounds.origin.y + self.originY);
+  // Draw the origin point
+  NSBezierPath *originPath = [NSBezierPath bezierPath];
+  CGFloat originX = bounds.origin.x + self.originX;
+  CGFloat originY = bounds.origin.y + self.originY;
+  CGFloat originSize = 10.0;
+  [originPath appendBezierPathWithArcWithCenter:NSMakePoint(originX, originY) radius:originSize / 2.0 startAngle:0.0 endAngle:360.0];
+  [[NSColor redColor] setFill];  // Set the fill color (you can change this color)
+  [originPath fill];
 
-  // Position the draggable point at the calculated position
-  CGFloat pointSize = 10.0;
-  if (!self.draggablePoint) {
-      self.draggablePoint = [[DraggablePointView alloc] initWithFrame:NSMakeRect(0, 0, pointSize, pointSize)];
-      [self addSubview:self.draggablePoint];
-  }
-  [self.draggablePoint setFrame:NSMakeRect(origin.x - pointSize / 2.0, origin.y - pointSize / 2.0, pointSize, pointSize)];
 }
 
 

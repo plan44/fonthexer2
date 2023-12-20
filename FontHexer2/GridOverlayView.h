@@ -6,13 +6,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "DraggablePointView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GridOverlayView : NSView
-
-@property (nonatomic, strong) DraggablePointView *draggablePoint;
 
 @property (nonatomic) NSPoint initialMouseLocation;
 
