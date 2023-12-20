@@ -98,6 +98,52 @@
 
 // MARK: sample
 
+#if GUGUS
+- (void)sampleColorsInGridCells {
+    // Get the bounds of the view
+    NSRect bounds = [self bounds];
+
+    // Get the ViewController
+    ViewController *viewController = (ViewController *)self.window.contentViewController;
+
+    // Create the bitmap representation
+    NSImage *image = [[NSImage alloc] initWithSize:self.label.bounds.size];
+
+    // Create a graphics context with a scale of 1.0
+    NSGraphicsContext *context = [NSGraphicsContext graphicsContextWithBitmapImageRep:[[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]]];
+    [NSGraphicsContext saveGraphicsState];
+    [NSGraphicsContext setCurrentContext:context];
+    CGContextRef ctx = [context CGContext];
+    CGContextScaleCTM(ctx, 1.0, 1.0);
+
+    // Render the label into the context
+    [self.label.layer renderInContext:ctx];
+
+    [NSGraphicsContext restoreGraphicsState];
+
+    // Create the bitmap representation from the graphics context
+    NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc] initWithCGImage:[context.CGContext
+                                                                             createCGImage:[context.bitmapImageRep CGImage]
+                                                                             fromRect:[context.bitmapImageRep rect]]];
+
+    // Iterate through each cell and sample the color at the center
+    for (NSInteger row = 0; row < numRows; row++) {
+        for (NSInteger col = 0; col < numCols; col++) {
+            CGFloat x = bounds.origin.x + (col + 0.5) * cellWidth + self.originX;
+            CGFloat y = bounds.origin.y + (row + 0.5) * cellHeight + self.originY;
+
+            // Check if the color at the center of the cell is dark
+            BOOL isDarkColor = [viewController isColorAtPointDark:NSMakePoint(x, y) inBitmap:bitmapRep];
+
+            // Do something with the result (e.g., print it)
+            NSLog(@"Is color at cell (%ld, %ld) dark? %@", (long)row, (long)col, isDarkColor ? @"YES" : @"NO");
+        }
+    }
+}
+#endif
+
+
+
 - (void)sampleColorsInGridCells
 {
   // Get the bounds of the view
@@ -106,20 +152,39 @@
   NSInteger numRows = 10;
   NSInteger numCols = 10;
 
-  // Get the content of the label's layer as an image
-  NSImage *image = [[NSImage alloc] initWithSize:self.outputLabel.bounds.size];
-  [image lockFocus];
-  [self.outputLabel.layer renderInContext:[NSGraphicsContext currentContext].CGContext];
-  [image unlockFocus];
+  // Create the bitmap representation
+  NSBitmapImageRep *bitmapRep;
 
-  NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
+  // Create a graphics context with a scale of 1.0
+  NSGraphicsContext *context = [NSGraphicsContext graphicsContextWithBitmapImageRep:[[NSBitmapImageRep alloc] initWithData:[NSData data]]];
+  [NSGraphicsContext saveGraphicsState];
+  [NSGraphicsContext setCurrentContext:context];
+  CGContextRef ctx = [context CGContext];
+  CGContextScaleCTM(ctx, 1.0, 1.0);
 
-  // Log the contents of the image (debugging purposes)
-  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  NSString *documentsDirectory = [paths firstObject];
-  NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"debug_image.png"];
-  NSData *pngData = [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
-  [pngData writeToFile:filePath atomically:YES];
+  // Render the label into the context
+  [self.outputLabel.layer renderInContext:ctx];
+
+  [NSGraphicsContext restoreGraphicsState];
+
+  // Retrieve the bitmap representation from the context
+  bitmapRep = [context.bitmapImageRep copy];
+
+//  // Get the content of the label's layer as an image
+//  NSImage *image = [[NSImage alloc] initWithSize:self.outputLabel.bounds.size];
+//
+//  [image lockFocus];
+//  [self.outputLabel.layer renderInContext:[NSGraphicsContext currentContext].CGContext];
+//  [image unlockFocus];
+//
+//  NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
+//
+//  // Log the contents of the image (debugging purposes)
+////  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+////  NSString *documentsDirectory = [paths firstObject];
+////  NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"debug_image.png"];
+////  NSData *pngData = [bitmapRep representationUsingType:NSPNGFileType properties:@{}];
+////  [pngData writeToFile:filePath atomically:YES];
 
 
   // Iterate through each cell and sample the color at the center
