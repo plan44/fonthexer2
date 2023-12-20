@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) DraggablePointView *draggablePoint;
 
+@property (nonatomic) NSPoint initialMouseLocation;
+
 @property (nonatomic) CGFloat originX;
 @property (nonatomic) CGFloat originY;
 

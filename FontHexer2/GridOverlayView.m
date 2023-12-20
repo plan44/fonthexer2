@@ -20,6 +20,26 @@
   return self;
 }
 
+
+- (void)mouseDown:(NSEvent *)event {
+    self.initialMouseLocation = [event locationInWindow];
+}
+
+- (void)mouseDragged:(NSEvent *)event {
+    NSPoint currentMouseLocation = [event locationInWindow];
+    CGFloat deltaX = currentMouseLocation.x - self.initialMouseLocation.x;
+    CGFloat deltaY = currentMouseLocation.y - self.initialMouseLocation.y;
+
+    self.originX += deltaX;
+    self.originY += deltaY;
+
+    self.initialMouseLocation = currentMouseLocation;
+
+    [self setNeedsDisplay:YES];
+}
+
+
+
 static CGFloat const cellWidth = 40.0;
 static CGFloat const cellHeight = 40.0;
 
@@ -44,22 +64,22 @@ static CGFloat const cellHeight = 40.0;
 
   // Draw horizontal grid lines
   for (NSInteger row = 1; row < numRows; row++) {
-    NSBezierPath *line = [NSBezierPath bezierPath];
-    CGFloat y = bounds.origin.y + row * cellHeight + self.originY; // Change here
-    [line moveToPoint:NSMakePoint(bounds.origin.x, y)];
-    [line lineToPoint:NSMakePoint(bounds.origin.x + bounds.size.width, y)];
-    [line setLineWidth:lineWidth];
-    [line stroke];
+      NSBezierPath *line = [NSBezierPath bezierPath];
+      CGFloat y = bounds.origin.y + row * cellHeight + self.originY;
+      [line moveToPoint:NSMakePoint(bounds.origin.x, y)];
+      [line lineToPoint:NSMakePoint(bounds.origin.x + bounds.size.width, y)];
+      [line setLineWidth:lineWidth];
+      [line stroke];
   }
 
   // Draw vertical grid lines
   for (NSInteger col = 1; col < numCols; col++) {
-    NSBezierPath *line = [NSBezierPath bezierPath];
-    CGFloat x = bounds.origin.x + col * cellWidth + self.originX; // Change here
-    [line moveToPoint:NSMakePoint(x, bounds.origin.y)];
-    [line lineToPoint:NSMakePoint(x, bounds.origin.y + bounds.size.height)];
-    [line setLineWidth:lineWidth];
-    [line stroke];
+      NSBezierPath *line = [NSBezierPath bezierPath];
+      CGFloat x = bounds.origin.x + col * cellWidth + self.originX;
+      [line moveToPoint:NSMakePoint(x, bounds.origin.y)];
+      [line lineToPoint:NSMakePoint(x, bounds.origin.y + bounds.size.height)];
+      [line setLineWidth:lineWidth];
+      [line stroke];
   }
 
   // Calculate the position of the draggable point
