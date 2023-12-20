@@ -17,5 +17,6 @@
 @property (weak) IBOutlet GridOverlayView *samplingGrid;
 @property (weak) IBOutlet NSButton *showFontsButton;
 @property (weak) IBOutlet NSSlider *fontSizeSlider;
+@property (weak) IBOutlet NSTextField *charsetTextField;
 
 @end

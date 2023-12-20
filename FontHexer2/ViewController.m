@@ -18,6 +18,7 @@
   [self.fontPopup addItemsWithTitles:fontFamilyNames];
 
   [self updateLabelFont:nil];
+  [self setDefaultCharset:nil];
 }
 
 
@@ -90,10 +91,46 @@
 }
 
 
-- (IBAction)samplePixels:(id)sender
+
+- (IBAction)setDefaultCharset:(id)sender
 {
-  NSArray* glyph = [self sampleColorsInGridCells];
-  NSLog(@"Glyph with %ld cols", glyph.count);
+  NSMutableString* chs = [NSMutableString string];
+
+  // ASCII
+  for(char c = ' '; c<0x7F; c++) {
+    [chs appendFormat:@"%c", c];
+  }
+  // our special chars we'd like to have
+  [chs appendString:@"ÀÁÂÄÈÉÊÖÜàáâäçèéêëìíîïöü–’•"];
+  [self.charsetTextField setStringValue:chs];
+}
+
+
+
+- (IBAction)sampleFont:(id)sender
+{
+  NSString* charsToRender = self.charsetTextField.stringValue;
+  for (NSUInteger i = 0; i < [charsToRender length]; ) {
+    NSRange range = [charsToRender rangeOfComposedCharacterSequenceAtIndex:i];
+    // extract composed chars (usually: none)
+    NSString *character = [charsToRender substringWithRange:range];
+
+    // Extract the UTF-8 sequence(s) for the current character
+    const char* utf8char = [character UTF8String];
+    // Use character as needed
+    NSLog(@"\n\n=================\nNext char: %@ (%ld UTF8 bytes), range=(%ld, %ld))", character, (long)strlen(utf8char), (long)range.location, (long)range.length);
+
+    // put the char in the label
+    [self.outputLabel setStringValue:character];
+
+    // sample the char
+    NSArray* glyph = [self sampleColorsInGridCells];
+    NSLog(@"---------- Glyph with %ld cols", glyph.count);
+
+    // Move to the next character
+    i = NSMaxRange(range);
+  }
+
 }
 
 
@@ -150,8 +187,7 @@
       [chartext appendString:isDark ? @"X" : @"."];
       [rowpixels addObject:@(isDark)];
 
-      // Do something with the sampled color (e.g., print it)
-      NSLog(@"Dark at cell (%ld, %ld) coord (%ld, %ld): %d", (long)row, (long)col, (long)x, (long)y, isDark);
+      //NSLog(@"Dark at cell (%ld, %ld) coord (%ld, %ld): %d", (long)row, (long)col, (long)x, (long)y, isDark);
 
     }
     // end of row
