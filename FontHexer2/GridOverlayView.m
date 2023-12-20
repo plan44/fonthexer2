@@ -40,8 +40,8 @@
 
 
 
-static CGFloat const cellWidth = 40.0;
-static CGFloat const cellHeight = 40.0;
+static CGFloat const cellWidth = 20;
+static CGFloat const cellHeight = 20;
 
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -58,12 +58,12 @@ static CGFloat const cellHeight = 40.0;
   // Get the bounds of the view
   NSRect bounds = [self bounds];
 
-  // Calculate the number of rows and columns based on the cell size
-  NSInteger numRows = bounds.size.height / cellHeight;
-  NSInteger numCols = bounds.size.width / cellWidth;
+  // Calculate the number of rows and columns based on the cell size and offset
+  NSInteger numRows = (bounds.size.height + fabs(self.originY)) / cellHeight;
+  NSInteger numCols = (bounds.size.width + fabs(self.originX)) / cellWidth;
 
   // Draw horizontal grid lines
-  for (NSInteger row = 1; row < numRows; row++) {
+  for (NSInteger row = 0; row <= numRows; row++) {
       NSBezierPath *line = [NSBezierPath bezierPath];
       CGFloat y = bounds.origin.y + row * cellHeight + self.originY;
       [line moveToPoint:NSMakePoint(bounds.origin.x, y)];
@@ -73,7 +73,7 @@ static CGFloat const cellHeight = 40.0;
   }
 
   // Draw vertical grid lines
-  for (NSInteger col = 1; col < numCols; col++) {
+  for (NSInteger col = 0; col <= numCols; col++) {
       NSBezierPath *line = [NSBezierPath bezierPath];
       CGFloat x = bounds.origin.x + col * cellWidth + self.originX;
       [line moveToPoint:NSMakePoint(x, bounds.origin.y)];
