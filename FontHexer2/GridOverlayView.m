@@ -10,14 +10,30 @@
 @implementation GridOverlayView
 
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+  self = [super initWithCoder:coder];
+  if (self) {
+    [self commonInitialization];
+  }
+  return self;
+}
+
 - (instancetype)initWithFrame:(NSRect)frameRect
 {
   self = [super initWithFrame:frameRect];
   if (self) {
-    [self setWantsLayer:YES];
-    // ... existing initialization code ...
+    [self commonInitialization];
   }
   return self;
+}
+
+- (void)commonInitialization
+{
+  [self setWantsLayer:YES];
+  self.cellSize = 33;
+  self.originX = 0;
+  self.originY = 0;
 }
 
 
@@ -40,9 +56,6 @@
 
 
 
-static CGFloat const cellWidth = 33;
-static CGFloat const cellHeight = 33;
-
 - (void)drawRect:(NSRect)dirtyRect
 {
   [super drawRect:dirtyRect];
@@ -59,13 +72,13 @@ static CGFloat const cellHeight = 33;
   NSRect bounds = [self bounds];
 
   // Calculate the number of rows and columns based on the cell size and offset
-  NSInteger numRows = (bounds.size.height - fabs(self.originY)) / cellHeight;
-  NSInteger numCols = (bounds.size.width - fabs(self.originX)) / cellWidth;
+  NSInteger numRows = (bounds.size.height - fabs(self.originY)) / self.cellSize;
+  NSInteger numCols = (bounds.size.width - fabs(self.originX)) / self.cellSize;
 
   // Draw horizontal grid lines
   for (NSInteger row = 0; row <= numRows; row++) {
       NSBezierPath *line = [NSBezierPath bezierPath];
-      CGFloat y = bounds.origin.y + row * cellHeight + self.originY;
+      CGFloat y = bounds.origin.y + row * self.cellSize + self.originY;
       [line moveToPoint:NSMakePoint(bounds.origin.x, y)];
       [line lineToPoint:NSMakePoint(bounds.origin.x + bounds.size.width, y)];
       [line setLineWidth:lineWidth];
@@ -75,7 +88,7 @@ static CGFloat const cellHeight = 33;
   // Draw vertical grid lines
   for (NSInteger col = 0; col <= numCols; col++) {
       NSBezierPath *line = [NSBezierPath bezierPath];
-      CGFloat x = bounds.origin.x + col * cellWidth + self.originX;
+      CGFloat x = bounds.origin.x + col * self.cellSize + self.originX;
       [line moveToPoint:NSMakePoint(x, bounds.origin.y)];
       [line lineToPoint:NSMakePoint(x, bounds.origin.y + bounds.size.height)];
       [line setLineWidth:lineWidth];
@@ -92,44 +105,5 @@ static CGFloat const cellHeight = 33;
   [originPath fill];
 }
 
-
-// MARK: sample
-
-- (void)sampleColorsInGridCells
-{
-  // Get the bounds of the view
-  NSRect bounds = [self bounds];
-
-  NSInteger numRows = 5;
-  NSInteger numCols = 5;
-
-
-  // Iterate through each cell and sample the color at the center
-  for (NSInteger row = 0; row < numRows; row++) {
-    for (NSInteger col = 0; col < numCols; col++) {
-      CGFloat x = bounds.origin.x + (col + 0.5) * cellWidth + self.originX;
-      CGFloat y = bounds.origin.y + (row + 0.5) * cellHeight + self.originY;
-
-      // Sample the color at the center of the cell
-      NSColor *sampledColor = [self colorAtPoint:NSMakePoint(x, y)];
-
-      // Do something with the sampled color (e.g., print it)
-      NSLog(@"Color at cell (%ld, %ld): %@", (long)row, (long)col, sampledColor);
-    }
-  }
-}
-
-
-- (NSColor *)colorAtPoint:(NSPoint)point {
-  // Get the color at the specified point
-  NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(1, 1)];
-  [image lockFocus];
-  NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc] initWithFocusedViewRect:NSMakeRect(point.x, point.y, 1, 1)];
-  [image unlockFocus];
-
-  NSColor *color = [bitmapRep colorAtX:0 y:0];
-
-  return color;
-}
 
 @end
