@@ -12,6 +12,8 @@
 		ED0F06922B2C614300357A12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED0F06912B2C614300357A12 /* Assets.xcassets */; };
 		ED0F06952B2C614300357A12 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED0F06932B2C614300357A12 /* Main.storyboard */; };
 		ED0F06972B2C614300357A12 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED0F06962B2C614300357A12 /* main.m */; };
+		ED4A77382B32FB0D00B07A92 /* GridOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4A77372B32FB0D00B07A92 /* GridOverlayView.m */; };
+		ED4A773B2B32FD1B00B07A92 /* DraggablePointView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4A773A2B32FD1B00B07A92 /* DraggablePointView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,10 @@
 		ED0F06942B2C614300357A12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ED0F06962B2C614300357A12 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		ED0F06982B2C614300357A12 /* FontHexer2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FontHexer2.entitlements; sourceTree = "<group>"; };
+		ED4A77362B32FB0D00B07A92 /* GridOverlayView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GridOverlayView.h; sourceTree = "<group>"; };
+		ED4A77372B32FB0D00B07A92 /* GridOverlayView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GridOverlayView.m; sourceTree = "<group>"; };
+		ED4A77392B32FD1B00B07A92 /* DraggablePointView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DraggablePointView.h; sourceTree = "<group>"; };
+		ED4A773A2B32FD1B00B07A92 /* DraggablePointView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DraggablePointView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,10 @@
 			children = (
 				ED0F068B2B2C614200357A12 /* AppDelegate.h */,
 				ED0F068C2B2C614200357A12 /* AppDelegate.m */,
+				ED4A77362B32FB0D00B07A92 /* GridOverlayView.h */,
+				ED4A77372B32FB0D00B07A92 /* GridOverlayView.m */,
+				ED4A77392B32FD1B00B07A92 /* DraggablePointView.h */,
+				ED4A773A2B32FD1B00B07A92 /* DraggablePointView.m */,
 				ED0F068E2B2C614200357A12 /* ViewController.h */,
 				ED0F068F2B2C614200357A12 /* ViewController.m */,
 				ED0F06912B2C614300357A12 /* Assets.xcassets */,
@@ -138,8 +148,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED0F06902B2C614200357A12 /* ViewController.m in Sources */,
+				ED4A773B2B32FD1B00B07A92 /* DraggablePointView.m in Sources */,
 				ED0F06972B2C614300357A12 /* main.m in Sources */,
 				ED0F068D2B2C614200357A12 /* AppDelegate.m in Sources */,
+				ED4A77382B32FB0D00B07A92 /* GridOverlayView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
