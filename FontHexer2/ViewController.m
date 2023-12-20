@@ -17,7 +17,7 @@
   NSArray *fontFamilyNames = [NSFontManager.sharedFontManager availableFontFamilies];
   [self.fontPopup addItemsWithTitles:fontFamilyNames];
 
-  [self.outputLabel setFont:[NSFont systemFontOfSize:self.fontSizeSlider.floatValue]];
+  [self updateLabelFont:nil];
 }
 
 
@@ -61,41 +61,38 @@
 
 
 
-- (IBAction)fontSizeChanged:(id)sender {
-  // Get the slider value
-  CGFloat fontSize = self.fontSizeSlider.floatValue;
-
-  // Get the current font and update its size
-  NSFont *currentFont = [self.outputLabel font];
-  NSFont *updatedFont = [NSFont fontWithName:currentFont.fontName size:fontSize];
-
-  // Apply the updated font to the label
-  [self.outputLabel setFont:updatedFont];
-}
-
-
-
-- (IBAction)updateLabel:(id)sender
+- (IBAction)fontSizeChanged:(id)sender
 {
-  // Get selected font name
-  NSString *fontName = [self.fontPopup titleOfSelectedItem];
-
-  // Create font with default size
-  NSFont *font = [NSFont fontWithName:fontName size:[NSFont systemFontSize]];
-
-  // Apply bold and italic styles if selected
-  if (self.boldCheckbox.state == NSControlStateValueOn) {
-    font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
-  }
-
-  if (self.italicCheckbox.state == NSControlStateValueOn) {
-    font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
-  }
-
-  // Update label font
-  [self.outputLabel setFont:font];
+  // Get the slider value
+  [self updateLabelFont: sender];
 }
 
 
+
+- (IBAction)updateLabelFont:(id)sender
+{
+  NSFontManager *fontManager = [NSFontManager sharedFontManager];
+
+  NSString *fontName = [self.fontPopup titleOfSelectedItem];
+  CGFloat fontSize = [self.fontSizeSlider floatValue]; // Use slider's value
+
+  NSFont *newFont = [NSFont fontWithName:fontName size:fontSize];
+
+  if ([self.boldCheckbox state] == NSControlStateValueOn) {
+      newFont = [fontManager convertFont:newFont toHaveTrait:NSBoldFontMask];
+  }
+
+  if ([self.italicCheckbox state] == NSControlStateValueOn) {
+      newFont = [fontManager convertFont:newFont toHaveTrait:NSItalicFontMask];
+  }
+
+  [self.outputLabel setFont:newFont];
+}
+
+
+- (IBAction)samplePixels:(id)sender
+{
+  [self.samplingGrid sampleColorsInGridCells];
+}
 
 @end

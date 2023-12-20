@@ -6,6 +6,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "GridOverlayView.h"
 
 @interface ViewController : NSViewController <NSFontChanging, NSWindowDelegate>
 
@@ -13,6 +14,7 @@
 @property (weak) IBOutlet NSButton *boldCheckbox;
 @property (weak) IBOutlet NSButton *italicCheckbox;
 @property (weak) IBOutlet NSTextField *outputLabel;
+@property (weak) IBOutlet GridOverlayView *samplingGrid;
 @property (weak) IBOutlet NSButton *showFontsButton;
 @property (weak) IBOutlet NSSlider *fontSizeSlider;
 

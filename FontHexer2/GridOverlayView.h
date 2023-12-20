@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) CGFloat originX;
 @property (nonatomic) CGFloat originY;
 
+- (void)sampleColorsInGridCells;
+
 @end
 
 NS_ASSUME_NONNULL_END

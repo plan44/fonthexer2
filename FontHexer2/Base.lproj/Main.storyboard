@@ -707,44 +707,78 @@
                 <viewController title="FontHexer2" id="XfG-lQ-9wD" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="607" height="396"/>
-                        <autoresizingMask key="autoresizingMask"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kO5-5u-IhY">
-                                <rect key="frame" x="74" y="315" width="78" height="25"/>
+                                <rect key="frame" x="17" y="352" width="148" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="18M-H1-iEA">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
                                     <menu key="menu" id="g7T-Dz-ft9"/>
                                     <connections>
-                                        <action selector="updateLabel:" target="XfG-lQ-9wD" id="ZTd-HN-7Rc"/>
+                                        <action selector="updateLabelFont:" target="XfG-lQ-9wD" id="ZTd-HN-7Rc"/>
                                     </connections>
                                 </popUpButtonCell>
                             </popUpButton>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YyZ-BB-J7F">
-                                <rect key="frame" x="75" y="280" width="54" height="18"/>
+                                <rect key="frame" x="18" y="283" width="54" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="check" title="Bold" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="xSX-9H-4a3">
+                                <buttonCell key="cell" type="check" title="Bold" bezelStyle="regularSquare" imagePosition="left" inset="2" id="xSX-9H-4a3">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="updateLabel:" target="XfG-lQ-9wD" id="S0B-LT-y5E"/>
+                                    <action selector="updateLabelFont:" target="XfG-lQ-9wD" id="S0B-LT-y5E"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DTj-mF-Y6m">
-                                <rect key="frame" x="75" y="246" width="55" height="18"/>
+                                <rect key="frame" x="18" y="249" width="55" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="check" title="Italic" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="UZn-ih-Q2r">
+                                <buttonCell key="cell" type="check" title="Italic" bezelStyle="regularSquare" imagePosition="left" inset="2" id="UZn-ih-Q2r">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="updateLabel:" target="XfG-lQ-9wD" id="nFV-jV-N1w"/>
+                                    <action selector="updateLabelFont:" target="XfG-lQ-9wD" id="nFV-jV-N1w"/>
+                                </connections>
+                            </button>
+                            <slider horizontalHuggingPriority="750" id="NeV-oh-ll6">
+                                <rect key="frame" x="565" y="14" width="24" height="364"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
+                                <sliderCell key="cell" continuous="YES" alignment="left" minValue="42" maxValue="512" doubleValue="256" tickMarkPosition="right" sliderType="linear" id="TMC-Me-7Bm">
+                                    <font key="font" size="12" name="Helvetica"/>
+                                    <connections>
+                                        <action selector="fontSizeChanged:" target="XfG-lQ-9wD" id="AgT-EV-dwh"/>
+                                    </connections>
+                                </sliderCell>
+                            </slider>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8mV-vU-aBL">
+                                <rect key="frame" x="182" y="20" width="371" height="356"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="AB" drawsBackground="YES" id="pBM-ii-aRK">
+                                    <font key="font" metaFont="system" size="256"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dgT-RN-YB1" customClass="GridOverlayView">
+                                <rect key="frame" x="182" y="20" width="371" height="356"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </customView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DAn-RC-Uqb">
+                                <rect key="frame" x="13" y="181" width="155" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Sample" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ANI-X9-CRn">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="samplePixels:" target="XfG-lQ-9wD" id="jDL-z3-kQk"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8IN-J6-7Ei">
-                                <rect key="frame" x="70" y="179" width="115" height="32"/>
+                                <rect key="frame" x="13" y="313" width="155" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Show Fonts…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cI1-Mh-mAR">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -754,34 +788,7 @@
                                     </connections>
                                 </buttonCell>
                             </button>
-                            <slider horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NeV-oh-ll6">
-                                <rect key="frame" x="565" y="14" width="24" height="364"/>
-                                <sliderCell key="cell" continuous="YES" alignment="left" minValue="42" maxValue="512" doubleValue="256" tickMarkPosition="right" sliderType="linear" id="TMC-Me-7Bm">
-                                    <font key="font" size="12" name="Helvetica"/>
-                                    <connections>
-                                        <action selector="fontSizeChanged:" target="XfG-lQ-9wD" id="AgT-EV-dwh"/>
-                                    </connections>
-                                </sliderCell>
-                            </slider>
-                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8mV-vU-aBL">
-                                <rect key="frame" x="235" y="42" width="318" height="324"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="AB" drawsBackground="YES" id="pBM-ii-aRK">
-                                    <font key="font" metaFont="system" size="256"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dgT-RN-YB1" customClass="GridOverlayView">
-                                <rect key="frame" x="235" y="42" width="318" height="324"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </customView>
                         </subviews>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="NeV-oh-ll6" secondAttribute="trailing" constant="20" symbolic="YES" id="ArU-h4-XTO"/>
-                            <constraint firstItem="NeV-oh-ll6" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="WoA-pg-kEj"/>
-                            <constraint firstAttribute="bottom" secondItem="NeV-oh-ll6" secondAttribute="bottom" constant="20" symbolic="YES" id="xTS-nN-iqx"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="boldCheckbox" destination="YyZ-BB-J7F" id="Zd2-0K-a7m"/>
@@ -789,6 +796,7 @@
                         <outlet property="fontSizeSlider" destination="NeV-oh-ll6" id="C5O-uy-E8G"/>
                         <outlet property="italicCheckbox" destination="DTj-mF-Y6m" id="K4J-bb-Lgl"/>
                         <outlet property="outputLabel" destination="8mV-vU-aBL" id="mvg-LM-Sfn"/>
+                        <outlet property="samplingGrid" destination="dgT-RN-YB1" id="KXL-pS-ufs"/>
                         <outlet property="showFontsButton" destination="8IN-J6-7Ei" id="Q9V-dM-QDm"/>
                     </connections>
                 </viewController>

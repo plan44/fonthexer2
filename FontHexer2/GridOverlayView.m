@@ -40,8 +40,8 @@
 
 
 
-static CGFloat const cellWidth = 20;
-static CGFloat const cellHeight = 20;
+static CGFloat const cellWidth = 33;
+static CGFloat const cellHeight = 33;
 
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -59,8 +59,8 @@ static CGFloat const cellHeight = 20;
   NSRect bounds = [self bounds];
 
   // Calculate the number of rows and columns based on the cell size and offset
-  NSInteger numRows = (bounds.size.height + fabs(self.originY)) / cellHeight;
-  NSInteger numCols = (bounds.size.width + fabs(self.originX)) / cellWidth;
+  NSInteger numRows = (bounds.size.height - fabs(self.originY)) / cellHeight;
+  NSInteger numCols = (bounds.size.width - fabs(self.originX)) / cellWidth;
 
   // Draw horizontal grid lines
   for (NSInteger row = 0; row <= numRows; row++) {
@@ -90,8 +90,46 @@ static CGFloat const cellHeight = 20;
   [originPath appendBezierPathWithArcWithCenter:NSMakePoint(originX, originY) radius:originSize / 2.0 startAngle:0.0 endAngle:360.0];
   [[NSColor redColor] setFill];  // Set the fill color (you can change this color)
   [originPath fill];
-
 }
 
+
+// MARK: sample
+
+- (void)sampleColorsInGridCells
+{
+  // Get the bounds of the view
+  NSRect bounds = [self bounds];
+
+  NSInteger numRows = 5;
+  NSInteger numCols = 5;
+
+
+  // Iterate through each cell and sample the color at the center
+  for (NSInteger row = 0; row < numRows; row++) {
+    for (NSInteger col = 0; col < numCols; col++) {
+      CGFloat x = bounds.origin.x + (col + 0.5) * cellWidth + self.originX;
+      CGFloat y = bounds.origin.y + (row + 0.5) * cellHeight + self.originY;
+
+      // Sample the color at the center of the cell
+      NSColor *sampledColor = [self colorAtPoint:NSMakePoint(x, y)];
+
+      // Do something with the sampled color (e.g., print it)
+      NSLog(@"Color at cell (%ld, %ld): %@", (long)row, (long)col, sampledColor);
+    }
+  }
+}
+
+
+- (NSColor *)colorAtPoint:(NSPoint)point {
+  // Get the color at the specified point
+  NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(1, 1)];
+  [image lockFocus];
+  NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc] initWithFocusedViewRect:NSMakeRect(point.x, point.y, 1, 1)];
+  [image unlockFocus];
+
+  NSColor *color = [bitmapRep colorAtX:0 y:0];
+
+  return color;
+}
 
 @end
