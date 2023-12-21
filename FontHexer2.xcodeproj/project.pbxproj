@@ -13,6 +13,7 @@
 		ED0F06952B2C614300357A12 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED0F06932B2C614300357A12 /* Main.storyboard */; };
 		ED0F06972B2C614300357A12 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ED0F06962B2C614300357A12 /* main.m */; };
 		ED4A77382B32FB0D00B07A92 /* GridOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4A77372B32FB0D00B07A92 /* GridOverlayView.m */; };
+		ED4A773E2B3385DF00B07A92 /* P44FontGenerator.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED4A773D2B3385DF00B07A92 /* P44FontGenerator.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,8 @@
 		ED0F06982B2C614300357A12 /* FontHexer2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FontHexer2.entitlements; sourceTree = "<group>"; };
 		ED4A77362B32FB0D00B07A92 /* GridOverlayView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GridOverlayView.h; sourceTree = "<group>"; };
 		ED4A77372B32FB0D00B07A92 /* GridOverlayView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GridOverlayView.m; sourceTree = "<group>"; };
+		ED4A773C2B3385DF00B07A92 /* P44FontGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = P44FontGenerator.h; sourceTree = "<group>"; };
+		ED4A773D2B3385DF00B07A92 /* P44FontGenerator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = P44FontGenerator.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +70,8 @@
 				ED0F068F2B2C614200357A12 /* ViewController.m */,
 				ED0F06912B2C614300357A12 /* Assets.xcassets */,
 				ED0F06932B2C614300357A12 /* Main.storyboard */,
+				ED4A773C2B3385DF00B07A92 /* P44FontGenerator.h */,
+				ED4A773D2B3385DF00B07A92 /* P44FontGenerator.mm */,
 				ED0F06962B2C614300357A12 /* main.m */,
 				ED0F06982B2C614300357A12 /* FontHexer2.entitlements */,
 			);
@@ -145,6 +150,7 @@
 				ED0F06902B2C614200357A12 /* ViewController.m in Sources */,
 				ED0F06972B2C614300357A12 /* main.m in Sources */,
 				ED0F068D2B2C614200357A12 /* AppDelegate.m in Sources */,
+				ED4A773E2B3385DF00B07A92 /* P44FontGenerator.mm in Sources */,
 				ED4A77382B32FB0D00B07A92 /* GridOverlayView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

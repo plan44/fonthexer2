@@ -6,6 +6,7 @@
 //
 
 #import "ViewController.h"
+#import "P44FontGenerator.h"
 
 @implementation ViewController
 
@@ -17,8 +18,10 @@
   NSArray *fontFamilyNames = [NSFontManager.sharedFontManager availableFontFamilies];
   [self.fontPopup addItemsWithTitles:fontFamilyNames];
 
+  [self.sampleCharsTextField setStringValue:@"A0"];
   [self updateLabelFont:nil];
   [self setDefaultCharset:nil];
+  [self showSampleChars:nil];
 }
 
 
@@ -69,6 +72,28 @@
 }
 
 
+- (NSString *)makeP44fontNameFrom:(NSString*)inputString
+{
+  NSError *error = nil;
+
+  // Define a regular expression pattern to match non-alphanumeric characters
+  NSString *pattern = @"[^a-zA-Z0-9]";
+
+  // Create a regular expression with the specified pattern
+  NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+
+  // Replace matches with an underscore
+  NSString *resultString = [regex stringByReplacingMatchesInString:inputString
+                                                           options:0
+                                                             range:NSMakeRange(0, [inputString length])
+                                                      withTemplate:@"_"];
+  if (error) {
+    NSLog(@"Error creating regular expression: %@", error.localizedDescription);
+  }
+  return resultString;
+}
+
+
 
 - (IBAction)updateLabelFont:(id)sender
 {
@@ -76,6 +101,8 @@
 
   NSString *fontName = [self.fontPopup titleOfSelectedItem];
   CGFloat fontSize = [self.fontSizeSlider floatValue]; // Use slider's value
+
+  [self.fontNameTextField setStringValue:[self makeP44fontNameFrom:fontName]];
 
   NSFont *newFont = [NSFont fontWithName:fontName size:fontSize];
 
@@ -89,6 +116,47 @@
 
   [self.outputLabel setFont:newFont];
 }
+
+
+
+- (FILE *)getFileToWriteToWithDefault:(NSString*)aDefaultName
+{
+  NSSavePanel *savePanel = [NSSavePanel savePanel];
+
+  // Set the allowed file types
+  [savePanel setAllowedFileTypes:@[@"cpp"]];
+
+  // set the default name
+  if (aDefaultName) {
+    [savePanel setNameFieldStringValue:aDefaultName];
+  }
+
+  // Display the Save dialog
+  NSInteger result = [savePanel runModal];
+
+  // Check if the user clicked the Save button
+  if (result == NSModalResponseOK) {
+    // Get the selected file URL
+    NSURL *fileURL = [savePanel URL];
+
+    // Convert the file URL to a file path
+    const char *filePath = [[fileURL path] UTF8String];
+
+    // Open the file for writing
+    FILE *file = fopen(filePath, "w");
+
+    // Check if the file was opened successfully
+    if (file != NULL) {
+      return file;
+    } else {
+      NSLog(@"Failed to open file for writing.");
+    }
+  }
+  // Return NULL if there was an error or if the user canceled the Save operation
+  return NULL;
+}
+
+
 
 
 
@@ -110,6 +178,8 @@
 - (IBAction)sampleFont:(id)sender
 {
   NSString* charsToRender = self.charsetTextField.stringValue;
+
+  NSDictionary* fontDict = [NSMutableDictionary dictionary];
   for (NSUInteger i = 0; i < [charsToRender length]; ) {
     NSRange range = [charsToRender rangeOfComposedCharacterSequenceAtIndex:i];
     // extract composed chars (usually: none)
@@ -127,12 +197,27 @@
     NSArray* glyph = [self sampleColorsInGridCells];
     NSLog(@"---------- Glyph with %ld cols", glyph.count);
 
+    // save in font dict
+    [fontDict setValue:glyph forKey:character];
+
     // Move to the next character
     i = NSMaxRange(range);
   }
+  [self showSampleChars:nil];
 
+  // now create font source file
+  FILE* outputfile = [self getFileToWriteToWithDefault:[@"font_" stringByAppendingString:self.fontNameTextField.stringValue]];
+  if (outputfile) {
+    [P44FontGenerator generateFontNamed:self.fontNameTextField.stringValue fromData:fontDict intoFILE:outputfile];
+    fclose(outputfile);
+  }
 }
 
+
+- (IBAction)showSampleChars:(id)sender
+{
+  [self.outputLabel setStringValue:self.sampleCharsTextField.stringValue];
+}
 
 // MARK: sample
 
@@ -143,8 +228,8 @@
   // Get the bounds of the view
   NSRect bounds = [self.samplingGrid bounds];
 
-  NSInteger numRows = (bounds.size.height-self.samplingGrid.originY)/self.samplingGrid.cellSize;
-  NSInteger numCols = (bounds.size.width-self.samplingGrid.originX)/self.samplingGrid.cellSize;
+  NSInteger numRows = (bounds.size.height-self.samplingGrid.originY)/self.samplingGrid.cellSize+0.5;
+  NSInteger numCols = (bounds.size.width-self.samplingGrid.originX)/self.samplingGrid.cellSize+0.5;
 
   // Get the content of the label's layer as an image
   NSImage *image = [[NSImage alloc] initWithSize:self.outputLabel.bounds.size];
@@ -171,7 +256,7 @@
   NSInteger glyphHeight = 0;
   for (NSInteger col = 0; col < numCols; col++) {
     [chartext appendFormat:@"%02ld: ", (long)col];
-    NSMutableArray* rowpixels = [NSMutableArray array];
+    NSMutableArray* colpixels = [NSMutableArray array];
     for (NSInteger row = 0; row < numRows; row++) {
       CGFloat x = bounds.origin.x + (((CGFloat)col + 0.5) * self.samplingGrid.cellSize + self.samplingGrid.originX) * scale;
       CGFloat y = bounds.origin.y + (((CGFloat)row + 0.5) * self.samplingGrid.cellSize + self.samplingGrid.originY) * scale;
@@ -183,17 +268,17 @@
       // Sample the color from the image
       BOOL isDark = [self isColorAtPointDark:pt inBitmap:bitmapRep];
       if (isDark) glyphWidth = col+1;
-      if (isDark && row>=glyphHeight) glyphHeight = row+1;
+      if (isDark && row+1>glyphHeight) glyphHeight = row+1;
       [chartext appendString:isDark ? @"X" : @"."];
-      [rowpixels addObject:@(isDark)];
+      [colpixels addObject:@(isDark)];
 
       //NSLog(@"Dark at cell (%ld, %ld) coord (%ld, %ld): %d", (long)row, (long)col, (long)x, (long)y, isDark);
 
     }
     // end of row
     [chartext appendString:@"\n"];
-    [rowpixels removeObjectsInRange:NSMakeRange(glyphHeight, rowpixels.count-glyphHeight)];
-    [cols addObject:rowpixels];
+    [colpixels removeObjectsInRange:NSMakeRange(glyphHeight, colpixels.count-glyphHeight)];
+    [cols addObject:colpixels];
   }
   NSLog(@"Glyph (width:%ld, maxheight:%ld)\n%@\n", (long)glyphWidth, (long)glyphHeight, chartext);
   // remove the extra cols
