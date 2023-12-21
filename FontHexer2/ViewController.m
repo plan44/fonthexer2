@@ -18,36 +18,40 @@
   NSArray *fontFamilyNames = [NSFontManager.sharedFontManager availableFontFamilies];
   [self.fontPopup addItemsWithTitles:fontFamilyNames];
 
+}
+
+- (void)viewWillAppear
+{
   [self.sampleCharsTextField setStringValue:@"A0"];
-  [self updateLabelFont:nil];
+  [NSFontManager.sharedFontManager setSelectedFont:self.outputLabel.font isMultiple:NO];
+  [self fontSizeChanged:nil];
   [self setDefaultCharset:nil];
   [self showSampleChars:nil];
 }
 
 
-- (void)setRepresentedObject:(id)representedObject
-{
-  [super setRepresentedObject:representedObject];
-
-  // Update the view, if already loaded.
-}
-
-
 - (IBAction)showFontPicker:(id)sender
 {
-  NSFontPanel *fontPanel = [NSFontPanel sharedFontPanel];
+  NSFontManager *fontManager = [NSFontManager sharedFontManager];
+  NSFontPanel *fontPanel = [fontManager fontPanel:YES];
   [fontPanel setDelegate:self];
   [fontPanel makeKeyAndOrderFront:nil];
 }
 
 
-
 - (void)changeFont:(NSFontManager*)fontManager
 {
-  NSFont *selectedFont = [fontManager convertFont:[fontManager selectedFont]];
-
-  // Apply the selected font to your label or perform other actions
-  [self.outputLabel setFont:selectedFont];
+  NSFont *originalSelection = [fontManager selectedFont];
+  if (originalSelection) {
+    NSLog(@"Originally selected font: %@", originalSelection.fontName);
+  }
+  CGFloat fontSize = [self.fontSizeSlider floatValue]; // Use slider's value
+  NSFont *selectedFont = [fontManager convertFont:originalSelection toSize:fontSize];
+  if (selectedFont) {
+    NSLog(@"Selected font: %@", selectedFont.fontName);
+  }
+  [fontManager setSelectedFont:selectedFont isMultiple:NO];
+  [self updateLabelFont];
 }
 
 
@@ -64,11 +68,32 @@
 }
 
 
+- (IBAction)fontPopupChanged:(id)sender
+{
+  NSFontManager *fontManager = [NSFontManager sharedFontManager];
+  NSString *fontName = [self.fontPopup titleOfSelectedItem];
+  CGFloat fontSize = [self.fontSizeSlider floatValue]; // Use slider's value
+  [self.fontNameTextField setStringValue:[self makeP44fontNameFrom:fontName]];
+  NSFont *newFont = [NSFont fontWithName:fontName size:fontSize];
+  if ([self.boldCheckbox state] == NSControlStateValueOn) {
+    newFont = [fontManager convertFont:newFont toHaveTrait:NSBoldFontMask];
+  }
+  if ([self.italicCheckbox state] == NSControlStateValueOn) {
+    newFont = [fontManager convertFont:newFont toHaveTrait:NSItalicFontMask];
+  }
+  [fontManager setSelectedFont:newFont isMultiple:NO];
+  [self updateLabelFont];
+}
+
 
 - (IBAction)fontSizeChanged:(id)sender
 {
-  // Get the slider value
-  [self updateLabelFont: sender];
+  // font size slider changes
+  NSFontManager *fontManager = [NSFontManager sharedFontManager];
+  CGFloat fontSize = [self.fontSizeSlider floatValue]; // Use slider's value
+  NSFont *newFont = [fontManager convertFont:fontManager.selectedFont toSize:fontSize];
+  [fontManager setSelectedFont:newFont isMultiple:NO];
+  [self updateLabelFont];
 }
 
 
@@ -95,26 +120,9 @@
 
 
 
-- (IBAction)updateLabelFont:(id)sender
+- (IBAction)updateLabelFont
 {
-  NSFontManager *fontManager = [NSFontManager sharedFontManager];
-
-  NSString *fontName = [self.fontPopup titleOfSelectedItem];
-  CGFloat fontSize = [self.fontSizeSlider floatValue]; // Use slider's value
-
-  [self.fontNameTextField setStringValue:[self makeP44fontNameFrom:fontName]];
-
-  NSFont *newFont = [NSFont fontWithName:fontName size:fontSize];
-
-  if ([self.boldCheckbox state] == NSControlStateValueOn) {
-      newFont = [fontManager convertFont:newFont toHaveTrait:NSBoldFontMask];
-  }
-
-  if ([self.italicCheckbox state] == NSControlStateValueOn) {
-      newFont = [fontManager convertFont:newFont toHaveTrait:NSItalicFontMask];
-  }
-
-  [self.outputLabel setFont:newFont];
+  [self.outputLabel setFont:[NSFontManager sharedFontManager].selectedFont];
 }
 
 
