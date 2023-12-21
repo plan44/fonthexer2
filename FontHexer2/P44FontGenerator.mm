@@ -109,16 +109,69 @@ typedef struct {
 
 const int placeholderGlyphNo = 0; // placeholder must be the first glyph
 
-static NSInteger getMaxGlyphHeight(NSDictionary* aFontDict)
+
+typedef struct {
+  NSUInteger maxHeight;
+  NSUInteger minWidth;
+  NSUInteger maxWidth;
+  NSUInteger numGlyphs;
+  CGFloat averageWidth;
+} FontInfo;
+
+static FontInfo getFontInfo(NSDictionary* aFontDict)
 {
-  NSUInteger glyphHeight = 0;
+  FontInfo fontInfo;
+  fontInfo.maxHeight = 0;
+  fontInfo.minWidth = 999;
+  fontInfo.maxWidth = 0;
+  fontInfo.numGlyphs = 0;
+  fontInfo.averageWidth = 0;
+  NSUInteger widthSum = 0;
   for (NSString *key in aFontDict) {
     NSArray* glyph = aFontDict[key];
+    fontInfo.numGlyphs++;
+    if (glyph.count>fontInfo.maxWidth) fontInfo.maxWidth = glyph.count;
+    if (glyph.count<fontInfo.minWidth) fontInfo.minWidth = glyph.count;
+    widthSum += glyph.count;
     for (NSArray* col in glyph) {
-      if (col.count>glyphHeight) glyphHeight = (int)col.count;
+      if (col.count>fontInfo.maxHeight) fontInfo.maxHeight = (int)col.count;
     }
   }
-  return glyphHeight;
+  fontInfo.averageWidth = fontInfo.numGlyphs>0 ? (CGFloat)widthSum / fontInfo.numGlyphs : 0;
+  return fontInfo;
+}
+
+
+static NSArray* glyphForCode(NSDictionary* aFontDict, NSString* aCode, FontInfo& aFontInfo)
+{
+  NSArray* glyph;
+  // synthesize some special chars
+  if ([aCode isEqualToString:@" "]) {
+    // synthetize space
+    NSMutableArray* spaceGlyph = [NSMutableArray array];
+    for (int i=0; i<(int)(aFontInfo.averageWidth+0.5); i++) {
+      [spaceGlyph addObject:@[@(NO)]]; // single pixel empty row
+    }
+    glyph = spaceGlyph;
+  }
+  else if ([aCode isEqualToString:@"placeholder"]) {
+    // synthetize placeholder (rectangle of average width and full height)
+    NSMutableArray* placeholderGlyph = [NSMutableArray array];
+    int avgWidth = (int)(aFontInfo.averageWidth+0.5);
+    for (int i=0; i<avgWidth; i++) {
+      NSMutableArray* col = [NSMutableArray array];
+      for (int j=0; j<aFontInfo.maxHeight; j++) {
+        [col addObject:@(j==0 || j==aFontInfo.maxHeight-1 || i==0 || i==avgWidth-1 ? YES : NO)];
+      }
+      [placeholderGlyph addObject:col];
+    }
+    glyph = placeholderGlyph;
+  }
+  else {
+    // sampled normal char
+    glyph = aFontDict[aCode];
+  }
+  return glyph;
 }
 
 
@@ -152,9 +205,9 @@ static void fontAsGlyphStrings(NSDictionary* aFontDict, const char* aFontName, F
   fprintf(aOutputFile, "\nstatic const char * font_%s_glyphstrings[] = {\n", aFontName);
   NSArray *sortedKeys = [aFontDict.allKeys sortedArrayUsingSelector:@selector(compare:)];
   int glyphno = 0;
-  NSUInteger glyphHeight = getMaxGlyphHeight(aFontDict);
+  FontInfo fontInfo = getFontInfo(aFontDict);
   for (NSString* key in sortedKeys) {
-    NSArray* glyph = aFontDict[key];
+    NSArray* glyph = glyphForCode(aFontDict, key, fontInfo);
     string chardesc = [key UTF8String];
     string codedesc = "UTF-8";
     for (size_t i=0; i<chardesc.size(); i++) string_format_append(codedesc, " %02X", (uint8_t)chardesc[i]);
@@ -167,7 +220,7 @@ static void fontAsGlyphStrings(NSDictionary* aFontDict, const char* aFontName, F
       }
     }
     fprintf(aOutputFile, "  \"%s\" /* %s - Glyph %d */\n\n", chardesc.c_str(), codedesc.c_str(), glyphno);
-    renderGlyphTextPixels(glyphno, glyph, glyphHeight, aOutputFile);
+    renderGlyphTextPixels(glyphno, glyph, fontInfo.maxHeight, aOutputFile);
     glyphno++;
   }
   fprintf(aOutputFile, "  nullptr // terminator\n");
@@ -182,6 +235,7 @@ static bool mapcmp(const StringPair &a, const StringPair &b)
   return a.first < b.first;
 }
 
+
 static bool glyphDataToFontSource(NSDictionary* aFontDict, const char* aFontName, FILE* aOutputFile)
 {
   fprintf(aOutputFile, "\n\n// MARK: - '%s' generated font data\n", aFontName);
@@ -191,21 +245,21 @@ static bool glyphDataToFontSource(NSDictionary* aFontDict, const char* aFontName
   GlyphMap gm;
   int gh = 0;
   // figure out max glyph height
-  NSUInteger glyphHeight = getMaxGlyphHeight(aFontDict);
-  NSLog(@"highest glyph has height = %d", glyphHeight);
+  FontInfo fontInfo = getFontInfo(aFontDict);
+  NSLog(@"highest glyph has height = %ld", (long)fontInfo.maxHeight);
   // iterate over dictionary
   int g = 0;
   for (NSString *key in aFontDict) {
     g++; // count the glyph
-    NSArray* glyph = aFontDict[key];
     string code = [key UTF8String];
+    NSArray* glyph = glyphForCode(aFontDict, key, fontInfo);
     // create character definition
     string chr = "\"";
     for (NSArray* col in glyph) {
       // new glyph column
       uint64_t pixmap = 0;
       gh = 0;
-      for (int i=0; i<glyphHeight; i++) {
+      for (int i=0; i<fontInfo.maxHeight; i++) {
         pixmap = pixmap<<1;
         if (col.count>i) {
           pixmap |= [col[i] boolValue] ? 1 : 0;
@@ -213,7 +267,7 @@ static bool glyphDataToFontSource(NSDictionary* aFontDict, const char* aFontName
       }
       // Bit 0 of pixmap is topmost pixel of the glyph
       // Bit 0 of the first byte of the col data is topmoxt pixel of the glyph
-      for (int i=(glyphHeight-1)>>3; i>=0; --i) {
+      for (int i=((int)fontInfo.maxHeight-1)>>3; i>=0; --i) {
         string_format_append(chr, "\\x%02x", (unsigned int)(pixmap>>(i*8))&0xFF);
       }
     }
@@ -274,7 +328,7 @@ static bool glyphDataToFontSource(NSDictionary* aFontDict, const char* aFontName
   // now the font head record
   fprintf(aOutputFile, "\nstatic const font_t font_%s = {\n", aFontName);
   fprintf(aOutputFile, "  .fontName = \"%s\",\n", aFontName);
-  fprintf(aOutputFile, "  .glyphHeight = %d,\n", glyphHeight);
+  fprintf(aOutputFile, "  .glyphHeight = %ld,\n", (long)fontInfo.maxHeight);
   fprintf(aOutputFile, "  .numGlyphs = %d,\n", gno);
   fprintf(aOutputFile, "  .glyphRanges = font_%s_ranges,\n", aFontName);
   fprintf(aOutputFile, "  .glyphs = font_%s_glyphs\n", aFontName);

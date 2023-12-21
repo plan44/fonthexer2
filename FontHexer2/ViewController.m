@@ -22,7 +22,7 @@
 
 - (void)viewWillAppear
 {
-  [self.sampleCharsTextField setStringValue:@"A0"];
+  [self.sampleCharsTextField setStringValue:@"gfA0"];
   [NSFontManager.sharedFontManager setSelectedFont:self.outputLabel.font isMultiple:NO];
   [self fontSizeChanged:nil];
   [self setDefaultCharset:nil];
@@ -188,6 +188,8 @@
   NSString* charsToRender = self.charsetTextField.stringValue;
 
   NSDictionary* fontDict = [NSMutableDictionary dictionary];
+  // create empty placeholder glyph (will be syntesized when exported)
+  [fontDict setValue:@[@[@(NO)]] forKey:@"placeholder"];
   for (NSUInteger i = 0; i < [charsToRender length]; ) {
     NSRange range = [charsToRender rangeOfComposedCharacterSequenceAtIndex:i];
     // extract composed chars (usually: none)
