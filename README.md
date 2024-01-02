@@ -21,9 +21,9 @@ The app structure is such that adding different export formats would be simple, 
 
 ## How this app came to be
 
-The p44lgraphics export part is fully hand-coded C++ mostly adapted from existing code in `p44lgraphics/textview.cpp`.
+The p44lgraphics export part is fully hand-coded C++, most of it adapted from existing code in `p44lgraphics/textview.cpp`.
 
-However the mac app itself is mostly the result of a conversion with ChatGPT 3.5. I have a firm understanding of the Cocoa concepts, but my practice is very dated and mostly iOS focused, so for every little UI detail I would have needed to research APIs and howtos. Asking the AI chatbot made this much easier - the suggested code usually worked out of the box. Finetuning then turned out to be more efficient to do manually (or leave for later, like proper fontpanel functioning) - the more detailed and specific my prompt was, the more the AI tended to hallucinate the APIs that *would* fit my needs - but don't exist.
+However the mac app itself is primarily the result of a conversation with ChatGPT 3.5. I have a firm understanding of the Cocoa concepts, but my practice is very dated and mostly iOS focused, so for every little UI detail I would have needed to research APIs and howtos. Asking the AI chatbot made this much easier - the suggested code usually worked out of the box. Only finetuning turned out to be more efficient to do manually (or leave for later, like proper fontpanel functioning) - the more detailed and specific my prompt was, the more the AI tended to hallucinate the APIs that *would* fit my needs - but don't exist.
 
 ---
 
