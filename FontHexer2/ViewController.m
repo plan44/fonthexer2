@@ -127,12 +127,12 @@
 
 
 
-- (FILE *)getFileToWriteToWithDefault:(NSString*)aDefaultName
+- (FILE *)getFileToWriteToWithDefault:(NSString*)aDefaultName andExtension:(NSString*)aExtension
 {
   NSSavePanel *savePanel = [NSSavePanel savePanel];
 
   // Set the allowed file types
-  [savePanel setAllowedFileTypes:@[@"cpp"]];
+  [savePanel setAllowedFileTypes:@[aExtension]];
 
   // set the default name
   if (aDefaultName) {
@@ -216,10 +216,19 @@
   [self showSampleChars:nil];
 
   // now create font source file
-  FILE* outputfile = [self getFileToWriteToWithDefault:[@"font_" stringByAppendingString:self.fontNameTextField.stringValue]];
-  if (outputfile) {
-    [P44FontGenerator generateFontNamed:self.fontNameTextField.stringValue fromData:fontDict intoFILE:outputfile];
-    fclose(outputfile);
+  if ([self.cppCheckbox state] == NSControlStateValueOn) {
+    FILE* outputfile = [self getFileToWriteToWithDefault:[@"font_" stringByAppendingString:self.fontNameTextField.stringValue] andExtension:@"cpp"];
+    if (outputfile) {
+      [P44FontGenerator generateFontSourceNamed:self.fontNameTextField.stringValue withCopyright:self.copyrightTextField.stringValue fromData:fontDict intoFILE:outputfile];
+      fclose(outputfile);
+    }
+  }
+  if ([self.lrgfCheckbox state] == NSControlStateValueOn) {
+    FILE* outputfile = [self getFileToWriteToWithDefault:[@"font_" stringByAppendingString:self.fontNameTextField.stringValue]  andExtension:@"lrgf"];
+    if (outputfile) {
+      [P44FontGenerator generateFontFileNamed:self.fontNameTextField.stringValue withCopyright:self.copyrightTextField.stringValue fromData:fontDict intoFILE:outputfile];
+      fclose(outputfile);
+    }
   }
 }
 

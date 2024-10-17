@@ -11,7 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface P44FontGenerator : NSObject
 
-+ (void)generateFontNamed:(NSString*)aFontName fromData:(NSDictionary*)aFontDict intoFILE:(FILE*)aOutputFile;
++ (void)generateFontSourceNamed:(NSString*)aFontName withCopyright:(NSString*)aCopyright fromData:(NSDictionary*)aFontDict intoFILE:(FILE*)aOutputFile;
++ (void)generateFontFileNamed:(NSString*)aFontName withCopyright:(NSString*)aCopyright fromData:(NSDictionary*)aFontDict intoFILE:(FILE*)aOutputFile;
 
 @end
 

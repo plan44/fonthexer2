@@ -18,7 +18,10 @@
 @property (weak) IBOutlet NSButton *showFontsButton;
 @property (weak) IBOutlet NSSlider *fontSizeSlider;
 @property (weak) IBOutlet NSTextField *charsetTextField;
+@property (weak) IBOutlet NSTextField *copyrightTextField;
 @property (weak) IBOutlet NSTextField *sampleCharsTextField;
 @property (weak) IBOutlet NSTextField *fontNameTextField;
+@property (weak) IBOutlet NSButton *cppCheckbox;
+@property (weak) IBOutlet NSButton *lrgfCheckbox;
 
 @end
