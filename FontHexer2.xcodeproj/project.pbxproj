@@ -33,6 +33,7 @@
 		ED4A773D2B3385DF00B07A92 /* P44FontGenerator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = P44FontGenerator.mm; sourceTree = "<group>"; };
 		ED5DABBB2CC16E0500F0B716 /* tlv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = tlv.hpp; sourceTree = "<group>"; };
 		ED5DABBC2CC16E0500F0B716 /* tlv.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tlv.cpp; sourceTree = "<group>"; };
+		ED5DABBE2CC3F8F200F0B716 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +50,7 @@
 		ED0F067F2B2C614200357A12 = {
 			isa = PBXGroup;
 			children = (
+				ED5DABBE2CC3F8F200F0B716 /* README.md */,
 				ED0F068A2B2C614200357A12 /* FontHexer2 */,
 				ED0F06892B2C614200357A12 /* Products */,
 			);
