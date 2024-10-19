@@ -51,7 +51,7 @@
     NSLog(@"Selected font: %@", selectedFont.fontName);
   }
   [fontManager setSelectedFont:selectedFont isMultiple:NO];
-  [self updateLabelFont];
+  [self updateLabelFont: nil];
 }
 
 
@@ -68,7 +68,7 @@
 }
 
 
-- (IBAction)fontPopupChanged:(id)sender
+- (IBAction)fontSettingsChanged:(id)sender
 {
   NSFontManager *fontManager = [NSFontManager sharedFontManager];
   NSString *fontName = [self.fontPopup titleOfSelectedItem];
@@ -82,7 +82,7 @@
     newFont = [fontManager convertFont:newFont toHaveTrait:NSItalicFontMask];
   }
   [fontManager setSelectedFont:newFont isMultiple:NO];
-  [self updateLabelFont];
+  [self updateLabelFont: nil];
 }
 
 
@@ -93,7 +93,7 @@
   CGFloat fontSize = [self.fontSizeSlider floatValue]; // Use slider's value
   NSFont *newFont = [fontManager convertFont:fontManager.selectedFont toSize:fontSize];
   [fontManager setSelectedFont:newFont isMultiple:NO];
-  [self updateLabelFont];
+  [self updateLabelFont: nil];
 }
 
 
@@ -119,8 +119,7 @@
 }
 
 
-
-- (IBAction)updateLabelFont
+- (IBAction)updateLabelFont: (id)sender
 {
   [self.outputLabel setFont:[NSFontManager sharedFontManager].selectedFont];
 }
@@ -249,6 +248,7 @@
 
   NSInteger numRows = (bounds.size.height-self.samplingGrid.originY)/self.samplingGrid.cellSize+0.5;
   NSInteger numCols = (bounds.size.width-self.samplingGrid.originX)/self.samplingGrid.cellSize+0.5;
+  BOOL allCols = [self.eliminateTrailingColCheckbox state] == NSControlStateValueOff;
 
   // Get the content of the label's layer as an image
   NSImage *image = [[NSImage alloc] initWithSize:self.outputLabel.bounds.size];
@@ -259,11 +259,11 @@
   NSBitmapImageRep *bitmapRep = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
 
   // Log the contents of the image (debugging purposes)
-//  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//  NSString *documentsDirectory = [paths firstObject];
-//  NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"debug_image.png"];
-//  NSData *pngData = [bitmapRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
-//  [pngData writeToFile:filePath atomically:YES];
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *documentsDirectory = [paths firstObject];
+  NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"debug_image.png"];
+  NSData *pngData = [bitmapRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
+  [pngData writeToFile:filePath atomically:YES];
 
   // get the scaling, might be retina as we are rendering in the window context, apparently
   NSWindow *mainWindow = [[NSApplication sharedApplication] mainWindow];
@@ -273,6 +273,8 @@
   NSMutableString* chartext = [NSMutableString string];
   NSInteger glyphWidth = 0;
   NSInteger glyphHeight = 0;
+  BOOL started = NO;
+  NSInteger firstUsedCol = 0;
   for (NSInteger col = 0; col < numCols; col++) {
     [chartext appendFormat:@"%02ld: ", (long)col];
     NSMutableArray* colpixels = [NSMutableArray array];
@@ -286,7 +288,11 @@
 
       // Sample the color from the image
       BOOL isDark = [self isColorAtPointDark:pt inBitmap:bitmapRep];
-      if (isDark) glyphWidth = col+1;
+      if (!started && (isDark || allCols)) {
+        firstUsedCol = col;
+        started = YES;
+      }
+      if (isDark) glyphWidth = col+1-firstUsedCol;
       if (isDark && row+1>glyphHeight) glyphHeight = row+1;
       [chartext appendString:isDark ? @"X" : @"."];
       [colpixels addObject:@(isDark)];
@@ -296,10 +302,12 @@
     }
     // end of row
     [chartext appendString:@"\n"];
-    [colpixels removeObjectsInRange:NSMakeRange(glyphHeight, colpixels.count-glyphHeight)];
-    [cols addObject:colpixels];
+    if (started) {
+      [colpixels removeObjectsInRange:NSMakeRange(glyphHeight, colpixels.count-glyphHeight)];
+      [cols addObject:colpixels];
+    }
   }
-  NSLog(@"Glyph (width:%ld, maxheight:%ld)\n%@\n", (long)glyphWidth, (long)glyphHeight, chartext);
+  NSLog(@"Glyph (width:%ld, empty cols skipped: %ld, maxheight:%ld)\n%@\n", (long)glyphWidth, (long)firstUsedCol, (long)glyphHeight, chartext);
   // remove the extra cols
   [cols removeObjectsInRange:NSMakeRange(glyphWidth, cols.count-glyphWidth)];
   return cols;

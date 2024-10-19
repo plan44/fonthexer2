@@ -21,6 +21,7 @@
 @property (weak) IBOutlet NSTextField *copyrightTextField;
 @property (weak) IBOutlet NSTextField *sampleCharsTextField;
 @property (weak) IBOutlet NSTextField *fontNameTextField;
+@property (weak) IBOutlet NSButton *eliminateTrailingColCheckbox;
 @property (weak) IBOutlet NSButton *cppCheckbox;
 @property (weak) IBOutlet NSButton *lrgfCheckbox;
 

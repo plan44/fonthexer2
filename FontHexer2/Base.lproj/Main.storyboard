@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -355,7 +356,7 @@
                                     <menu key="menu" id="g7T-Dz-ft9"/>
                                 </popUpButtonCell>
                                 <connections>
-                                    <action selector="fontPopupChanged:" target="XfG-lQ-9wD" id="aFh-fx-pnH"/>
+                                    <action selector="fontSettingsChanged:" target="XfG-lQ-9wD" id="aFh-fx-pnH"/>
                                 </connections>
                             </popUpButton>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YyZ-BB-J7F">
@@ -366,7 +367,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="updateLabelFont:" target="XfG-lQ-9wD" id="S0B-LT-y5E"/>
+                                    <action selector="fontSettingsChanged:" target="XfG-lQ-9wD" id="ZsS-ys-hS4"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DTj-mF-Y6m">
@@ -377,7 +378,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="updateLabelFont:" target="XfG-lQ-9wD" id="nFV-jV-N1w"/>
+                                    <action selector="fontSettingsChanged:" target="XfG-lQ-9wD" id="K2o-RJ-1iM"/>
                                 </connections>
                             </button>
                             <button toolTip="Show the macOS font panel" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8IN-J6-7Ei">
@@ -416,7 +417,7 @@
                                 <string key="toolTip">Resize the font to align grid with desired output pixels. Drag the grid to place the red origin at the bottom left corner of the first glyph</string>
                             </customView>
                             <button toolTip="Generates a .cpp source file to be used from textview.cpp in p44lrgraphics" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DAn-RC-Uqb">
-                                <rect key="frame" x="13" y="306" width="155" height="32"/>
+                                <rect key="frame" x="13" y="315" width="155" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Generate…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ANI-X9-CRn">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -427,7 +428,7 @@
                                 </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qVW-Zk-eNb">
-                                <rect key="frame" x="18" y="386" width="143" height="16"/>
+                                <rect key="frame" x="18" y="392" width="143" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Sample Chars to show:" id="Ktz-ML-1mK">
                                     <font key="font" metaFont="system"/>
@@ -436,7 +437,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField toolTip="Type characters to show as example in the grid to the right" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iro-gk-z97">
-                                <rect key="frame" x="20" y="363" width="141" height="21"/>
+                                <rect key="frame" x="20" y="369" width="141" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" continuous="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="j57-l1-04K">
                                     <font key="font" metaFont="system"/>
@@ -448,7 +449,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField toolTip="The font name as exported to a p44lrgraphics font source file" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MLv-Zn-RLc">
-                                <rect key="frame" x="20" y="216" width="141" height="21"/>
+                                <rect key="frame" x="20" y="184" width="141" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="9Gg-HV-tfa">
                                     <font key="font" metaFont="system"/>
@@ -457,7 +458,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F2m-iJ-cf2">
-                                <rect key="frame" x="18" y="240" width="118" height="16"/>
+                                <rect key="frame" x="18" y="208" width="118" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Output Font name:" id="A4f-TF-kQE">
                                     <font key="font" metaFont="system"/>
@@ -504,15 +505,12 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l8O-j9-lN2">
-                                <rect key="frame" x="18" y="263" width="100" height="18"/>
+                                <rect key="frame" x="18" y="231" width="100" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title=".lrgf font file" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="JuY-FB-O7d">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="updateLabelFont:" target="XfG-lQ-9wD" id="UIE-1k-A7f"/>
-                                </connections>
                             </button>
                             <textField toolTip="Type the characters you want to get extracted into the output font" focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7lc-mG-VZ2">
                                 <rect key="frame" x="19" y="44" width="616" height="21"/>
@@ -533,15 +531,20 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fcy-n6-ygm">
-                                <rect key="frame" x="18" y="285" width="131" height="18"/>
+                                <rect key="frame" x="18" y="252" width="131" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title=".cpp source code" bezelStyle="regularSquare" imagePosition="left" inset="2" id="9he-Lz-39g">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="updateLabelFont:" target="XfG-lQ-9wD" id="TMa-mX-vGs"/>
-                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8yh-Nb-dhG">
+                                <rect key="frame" x="19" y="277" width="141" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="eliminate leading empty columns" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="C6W-2X-bR4">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
                             </button>
                         </subviews>
                     </view>
@@ -550,6 +553,7 @@
                         <outlet property="charsetTextField" destination="d7U-RK-Znf" id="kKF-tp-5NG"/>
                         <outlet property="copyrightTextField" destination="7lc-mG-VZ2" id="6Cy-oq-hYs"/>
                         <outlet property="cppCheckbox" destination="fcy-n6-ygm" id="xs0-CK-pap"/>
+                        <outlet property="eliminateTrailingColCheckbox" destination="8yh-Nb-dhG" id="541-sh-llE"/>
                         <outlet property="fontNameTextField" destination="MLv-Zn-RLc" id="jRi-kg-RxH"/>
                         <outlet property="fontPopup" destination="kO5-5u-IhY" id="w4K-Nc-KBK"/>
                         <outlet property="fontSizeSlider" destination="NeV-oh-ll6" id="C5O-uy-E8G"/>
